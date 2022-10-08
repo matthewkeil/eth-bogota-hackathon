@@ -3,15 +3,13 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 contract SkyBlockContract is Ownable {
-  mapping(address => ParticipantStatus) public participants;
+  using EnumerableSet for EnumerableSet.AddressSet;
 
-  enum ParticipantStatus {
-    NONE,
-    NOMINATED,
-    ADMIN
-  }
+  EnumerableSet.AddressSet private admins;
+  EnumerableSet.AddressSet private nominees;
 
   /**
    *
@@ -22,7 +20,7 @@ contract SkyBlockContract is Ownable {
   event AcceptNomination(address indexed nominated, bytes32 email);
 
   constructor() {
-    participants[msg.sender] = ParticipantStatus.ADMIN;
+    admins.add(msg.sender);
   }
 
   /**
@@ -31,13 +29,18 @@ contract SkyBlockContract is Ownable {
    *
    */
   modifier isAdmin(address _addr) {
-    require(participants[_addr] == ParticipantStatus.ADMIN, "not an ADMIN");
+    require(!admins.contains(_addr), "not an ADMIN");
+    _;
+  }
+
+  modifier isNominated(address _addr) {
+    require(!nominees.contains(_addr), "not NOMINATED");
     _;
   }
 
   modifier canBeNominated(address _addr) {
-    require(participants[_addr] != ParticipantStatus.ADMIN, "already an ADMIN");
-    require(participants[_addr] != ParticipantStatus.NOMINATED, "already NOMINATED");
+    require(admins.contains(_addr), "already an ADMIN");
+    require(nominees.contains(_addr), "already NOMINATED");
     _;
   }
 
@@ -46,14 +49,15 @@ contract SkyBlockContract is Ownable {
    *  Methods
    *
    */
+
   function nominateAdmin(address _nominated) public isAdmin(msg.sender) canBeNominated(_nominated) {
-    participants[_nominated] = ParticipantStatus.NOMINATED;
+    nominees.add(_nominated);
     emit NominateAdmin(msg.sender, _nominated);
   }
 
-  function acceptNomination(bytes32 email) public {
-    require(participants[msg.sender] == ParticipantStatus.NOMINATED, "must be nominated");
-    participants[msg.sender] = ParticipantStatus.ADMIN;
+  function acceptNomination(bytes32 email) public isNominated(msg.sender) {
+    nominees.remove(msg.sender);
+    admins.add(msg.sender);
     emit AcceptNomination(msg.sender, email);
   }
 }
