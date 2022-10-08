@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract TrustedResourcesContract is Ownable {
+contract SkyBlockContract is Ownable {
   mapping(address => ParticipantStatus) public participants;
 
   enum ParticipantStatus {

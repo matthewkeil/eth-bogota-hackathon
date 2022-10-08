@@ -1,5 +1,5 @@
 {
-  "name": "@trusted-resources/contracts",
+  "name": "@sky-block/contracts",
   "version": "0.0.1",
   "scripts": {
     "clean:dist": "rimraf dist",
