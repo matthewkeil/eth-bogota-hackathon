@@ -1,4 +1,4 @@
-import * as IPFS from "ipfs-core";
+export {}
 
 declare global {
   export interface Window {

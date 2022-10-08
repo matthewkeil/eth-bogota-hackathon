@@ -9,9 +9,17 @@ contract TrustedResourcesContract is Ownable {
 
   enum ParticipantStatus {
     NONE,
-    REQUESTED,
+    NOMINATED,
     ADMIN
   }
+
+  /**
+   *
+   * Events
+   *
+   */
+  event NominateAdmin(address indexed existing, address indexed nominated);
+  event AcceptNomination(address indexed nominated, bytes32 email);
 
   constructor() {
     participants[msg.sender] = ParticipantStatus.ADMIN;
@@ -19,27 +27,33 @@ contract TrustedResourcesContract is Ownable {
 
   /**
    *
-   *  Participation
+   *  Modifiers
    *
    */
   modifier isAdmin(address _addr) {
-    require(participants[_addr] == ParticipantStatus.ADMNIN, "not an ADMIN");
+    require(participants[_addr] == ParticipantStatus.ADMIN, "not an ADMIN");
     _;
   }
 
-  event NominateAdmin(address indexed existing, address indexed nominated);
-
-  event AcceptAdmin(address indexed nominated, bytes32 email);
-
-  function nominateAdmin(address _nominated) public isAdmin(msg.sender) {
-    emit NominateAdmin(msg.sender, nominated);
+  modifier canBeNominated(address _addr) {
+    require(participants[_addr] != ParticipantStatus.ADMIN, "already an ADMIN");
+    require(participants[_addr] != ParticipantStatus.NOMINATED, "already NOMINATED");
+    _;
   }
 
-  function dualParticipant(
-    address _counterParty,
-    bytes32 _line1,
-    bytes32 _line2
-  ) public canParticipate(msg.sender) {
-    emit DualParticipant(msg.sender, _counterParty, _line1, _line2);
+  /**
+   *
+   *  Methods
+   *
+   */
+  function nominateAdmin(address _nominated) public isAdmin(msg.sender) canBeNominated(_nominated) {
+    participants[_nominated] = ParticipantStatus.NOMINATED;
+    emit NominateAdmin(msg.sender, _nominated);
+  }
+
+  function acceptNomination(bytes32 email) public {
+    require(participants[msg.sender] == ParticipantStatus.NOMINATED, "must be nominated");
+    participants[msg.sender] = ParticipantStatus.ADMIN;
+    emit AcceptNomination(msg.sender, email);
   }
 }

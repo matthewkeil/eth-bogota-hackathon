@@ -6,7 +6,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "noEmit": false,
-    "lib": ["DOM"],
+    "lib": ["DOM", "ESNext"],
     "types": ["long"]
   }
 }
