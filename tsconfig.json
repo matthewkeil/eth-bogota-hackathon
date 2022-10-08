@@ -1,0 +1,61 @@
+{
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    /**
+     *
+     * environment, modules and imports
+     *
+     */
+    "lib": ["ESNext", "DOM"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "checkJs": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
+    /**
+     *
+     * output
+     *
+     */
+    "target": "ES2018",
+    "noEmit": true,
+    "declaration": true,
+    "sourceMap": true,
+
+    /**
+     *
+     * modules
+     *
+     */
+
+    /**
+     *
+     * strictness
+     *
+     */
+    "strict": true,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /**
+     *
+     * typings
+     *
+     */
+    "types": ["node", "jest"],
+    "typeRoots": ["node_modules/@types"]
+  }
+}

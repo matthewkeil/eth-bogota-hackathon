@@ -1,0 +1,7 @@
+no_compile/**/*
+*package.json
+dist
+*.json
+*dist
+
+docs/**/*

@@ -1,0 +1,28 @@
+.DS_Store
+
+.envrc
+
+
+node_modules
+packages/*/node_modules
+dist/
+packages/*/dist/
+build/
+packages/*/build/
+cdk.out
+packages/*/cdk.out/
+
+# env files
+.env
+packages/*/.env
+env.*
+packages/*/env.*
+*.env
+packages/*/*.env
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+

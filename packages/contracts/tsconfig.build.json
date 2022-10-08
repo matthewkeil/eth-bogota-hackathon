@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["src"],
+  "exclude": ["**/*.spec.ts", "typechain", "dist", "node_modules"],
+  "files": ["hardhat.d.ts"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "noEmit": false,
+    "lib": ["DOM"],
+    "types": ["long"]
+  }
+}

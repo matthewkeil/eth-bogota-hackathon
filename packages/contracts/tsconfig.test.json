@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["bin", "src", "test", "typechain"],
+  "exclude": ["node_modules", "dist"],
+  "files": [
+    "hardhat.config.ts",
+    "hardhat.d.ts",
+    // "node_modules/@ethereum-waffle/jest/s/index.d.ts",
+    "../../node_modules/@ethereum-waffle/jest/src/index.d.ts"
+  ],
+  "compilerOptions": {
+    "lib": ["DOM"],
+    "noEmit": true
+  }
+}

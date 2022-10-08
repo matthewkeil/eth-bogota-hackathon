@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["bin", "lib", "src", "test", "typechain"],
+  "exclude": ["node_modules", "dist"],
+  "files": [
+    "hardhat.config.ts",
+    "hardhat.d.ts",
+    // "node_modules/@ethereum-waffle/jest/s/types.d.ts",
+    "../../node_modules/@ethereum-waffle/jest/src/types.d.ts"
+  ],
+  "compilerOptions": {
+    "target": "esnext",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "lib": ["ESNEXT", "DOM", "ESNext.AsyncIterable", "ESNext.Promise"],
+    "typeRoots": ["../../node_modules/@types", "node_modules/@types"]
+  }
+}
