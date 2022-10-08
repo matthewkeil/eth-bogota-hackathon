@@ -9,7 +9,7 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "./test/hardhatTsJestPlugin";
 
-const CONTRACT_NAME = "TrustedResourcesContract";
+const CONTRACT_NAME = "SkyBlockContract";
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
