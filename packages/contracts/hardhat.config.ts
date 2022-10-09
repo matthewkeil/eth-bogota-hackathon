@@ -72,8 +72,8 @@ const config: HardhatUserConfig = {
     polygon: {
       url: "https://polygon-rpc.com/",
       chainId: 137,
-      gas: 2100000,
-      gasPrice: 8000000000,
+      // gas: 2100000,
+      // gasPrice: 8000000000,
       accounts: accounts.map((privateKey) => privateKey)
     },
     mumbai: {

@@ -9,9 +9,9 @@ export async function deployContract(name: string, ...args: string[]) {
   if (!chain) {
     throw new Error(`Unsupported chainId: ${chainId}`);
   }
-  if ((chainId === 1 || chainId === 137) && process.env.NODE_ENV !== "production") {
-    throw new Error("Can't deploy contract on mainnet in development mode");
-  }
+  // if ((chainId === 1 || chainId === 137) && process.env.NODE_ENV !== "production") {
+  //   throw new Error("Can't deploy contract on mainnet in development mode");
+  // }
 
   const ContractFactory = await ethers.getContractFactory(name, signer);
   const contract = await ContractFactory.deploy(...args);
