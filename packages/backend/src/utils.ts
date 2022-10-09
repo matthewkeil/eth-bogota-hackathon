@@ -7,7 +7,6 @@ const iam = new IAM({ credentials });
 const ses = new SES({ region: "us-east-1", credentials });
 
 const apiKey = `${process.env.SENDGRID_API_KEY}`;
-console.log(apiKey);
 sendgrid.setApiKey(apiKey);
 
 interface CreateUserProps {
