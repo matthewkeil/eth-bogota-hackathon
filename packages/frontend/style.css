@@ -11,7 +11,7 @@ h2 {
 .container {
   max-width: 400px;
   height: 400px;
-  margin: 10vh auto 0 auto;
+  margin: 20vh auto 0 auto;
   background: #1f2937;
   padding: 50px;
   text-align: center;
@@ -86,11 +86,12 @@ h1 {
 }
 
 .display {
-  display: block;
+  display: inline;
 }
 
 #permission-page-btn,
-#decrypting-page-btn {
+#decrypting-page-btn,
+.nominee {
   background: none;
   border: none;
   padding: 0 20px;
