@@ -1,4 +1,4 @@
-import {SkyBlockContractService}  from "../contracts/dist/src/SkyBlockContract";
+import { SkyBlockContractService } from "../contracts/dist/src/SkyBlockContract";
 
 const permissionBtn = document.getElementById("permission-btn");
 const connectBtn = document.getElementById("connect-btn");
@@ -29,7 +29,8 @@ permissionBtn.addEventListener("click", () => {
 });
 // connectBtn.addEventListener("click", connect);
 
-const address = "0x355562132E54364fcbF6f7a61b7a8f4Cb1B3fc30";
+// const address = "0x355562132E54364fcbF6f7a61b7a8f4Cb1B3fc30";
+const address = "0x9aec505579a2f96f235bedb5f6e8635ac6c9ecab";
 const service = new SkyBlockContractService({ address });
-service.getAdmins().then(console.log)
-service.getNominees().then(console.log)
+service.getAdmins().then(console.log);
+service.getNominees().then(console.log);
