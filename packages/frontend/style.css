@@ -10,7 +10,8 @@ h2 {
 
 .container {
   max-width: 400px;
-  margin: 20vh auto 0 auto;
+  height: 400px;
+  margin: 10vh auto 0 auto;
   background: #1f2937;
   padding: 50px;
   text-align: center;
