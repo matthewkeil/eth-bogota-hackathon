@@ -1,0 +1,28 @@
+{
+  "name": "@sky-block/backend",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "npm run ts ./src",
+    "clean": "rm -rf dist",
+    "clean:nm": "rm -rf node_modules",
+    "build": "tsc -p tsconfig.build.json && rm -rf dist/providers",
+    "cdk": "cdk",
+    "node": "node",
+    "ts": "npm run node -- -r ts-node/register"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "ethers": "^5.7.1"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.1231.0",
+    "dotenv": "^10.0.0",
+    "esbuild": "^0.14.39",
+    "esbuild-node-externals": "^1.4.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "license": "MIT",
+  "private": true
+}
