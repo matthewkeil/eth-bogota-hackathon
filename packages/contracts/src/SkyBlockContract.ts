@@ -13,7 +13,10 @@ export class SkyBlockContractService {
   provider: Promise<SkyBlockContractType>;
 
   constructor({ address, provider }: SkyBlockContractServiceProps = {}) {
-    this.#address = address ?? require("../deployments/SkyBlockContract.json").address;
+    if (!address) {
+      throw new Error("address is required")
+    }
+    this.#address = address //?? require("../../deployments/SkyBlockContract.json").address;
 
     if (provider) {
       this.provider = buildContractProvider(this.#address, provider);
@@ -41,6 +44,16 @@ export class SkyBlockContractService {
     return provider.on("AcceptNomination", (nominated, email) => {
       return callback(decodeEvent(nominated, email));
     });
+  }
+
+  async getAdmins() {
+    const provider = await this.provider;
+    return provider.getAdmins()
+  }
+
+  async getNominees() {
+    const provider = await this.provider;
+    return provider.getNominees()
   }
 
   async nominateAdmin(address: string) {
