@@ -6,11 +6,11 @@
   "scripts": {
     "vite": "vite",
     "dev": "run-p vite esbuild:watch",
-    "copy": "cp index.html dist; cp style.css dist",
+    "copy": "cp index.html dist; cp style.css dist; cp bundle.js dist",
     "build": "npm run esbuild && npm run copy",
     "preview": "vite preview",
-    "esbuild": "esbuild main.js --bundle --outfile=dist/bundle.js",
-    "esbuild:watch": "esbuild main.js --bundle --outfile=dist/bundle.js --watch"
+    "esbuild": "esbuild main.js --bundle --outfile=bundle.js",
+    "esbuild:watch": "esbuild main.js --bundle --outfile=bundle.js --watch"
   },
   "devDependencies": {
     "vite": "^3.1.0",
