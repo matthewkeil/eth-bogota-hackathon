@@ -1,6 +1,8 @@
 import { SkyBlockContractService } from "../contracts/dist/src/SkyBlockContract";
 import { ethers } from "ethers";
 
+// 0xb95a21B151111D292787562100fff012F16f6874
+
 // const connectBtn = document.getElementById("connect-btn");
 // const address = "0x874b0F37636cE75E9ED48B5d55900a6089f20261";
 
@@ -103,8 +105,6 @@ async function buildNomineesHtml() {
     });
     nomineeList.appendChild(nomineeBtn);
   }
-
-  nomineeList.innerHTML = html;
 }
 
 async function acceptNomination(nominee) {
