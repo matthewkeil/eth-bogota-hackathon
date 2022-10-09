@@ -1,11 +1,14 @@
-import { publicEncrypt } from "crypto";
-import { IAM, SES } from "aws-sdk";
+import "dotenv/config";
+import { IAM, SES, SharedIniFileCredentials } from "aws-sdk";
 import sendgrid from "@sendgrid/mail";
 
-const iam = new IAM();
-const ses = new SES({ region: "us-east-1" });
+const credentials = new SharedIniFileCredentials({ profile: "tr" });
+const iam = new IAM({ credentials });
+const ses = new SES({ region: "us-east-1", credentials });
 
-sendgrid.setApiKey(`${process.env.SENDGRID_API_KEY}`);
+const apiKey = `${process.env.SENDGRID_API_KEY}`;
+console.log(apiKey);
+sendgrid.setApiKey(apiKey);
 
 interface CreateUserProps {
   address: string;
@@ -36,13 +39,13 @@ export async function createUser({ address }: CreateUserProps) {
     })
     .promise();
 
-  const encryptedPassword = publicEncrypt(address, Buffer.from(password)).toString();
+  // const encryptedPassword = publicEncrypt(address, Buffer.from(password)).toString();
 
-  console.log({ LoginProfile, encryptedPassword });
+  console.log({ LoginProfile, password });
 
   return {
     username: address,
-    password: encryptedPassword
+    password: password
   };
 }
 
