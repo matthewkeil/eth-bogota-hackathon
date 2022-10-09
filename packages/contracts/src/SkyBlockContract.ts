@@ -10,7 +10,8 @@ export interface SkyBlockContractServiceProps {
 
 export class SkyBlockContractService {
   #address: string;
-  provider: Promise<SkyBlockContractType>;
+  contract: Promise<SkyBlockContractType>;
+  provider!: SupportedProvider;
 
   constructor({ address, provider }: SkyBlockContractServiceProps = {}) {
     if (!address) {
@@ -19,19 +20,23 @@ export class SkyBlockContractService {
     this.#address = address; //?? require("../../deployments/SkyBlockContract.json").address;
 
     if (provider) {
-      this.provider = buildContractProvider(this.#address, provider);
+      this.provider = provider;
+      this.contract = buildContractProvider(this.#address, provider);
     } else {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.provider = (window as any).ethereum
+      this.contract = (window as any).ethereum
         .request({ method: "eth_requestAccounts" })
-        .then(() =>
-          buildContractProvider(this.#address, new EtherProviders.Web3Provider(window.ethereum))
-        );
+        .then(() => {
+          const web3Provider = new EtherProviders.Web3Provider(window.ethereum);
+          const signer = web3Provider.getSigner();
+          this.provider = signer;
+          return buildContractProvider(this.#address, signer);
+        });
     }
   }
 
   async onNominateAdmin(callback: (eventMeta: EventMeta) => void): Promise<SkyBlockContractType> {
-    const provider = await this.provider;
+    const provider = await this.contract;
     return provider.on("NominateAdmin", (existing, nominated) => {
       return callback(decodeEvent(existing, nominated));
     });
@@ -40,29 +45,29 @@ export class SkyBlockContractService {
   async onAcceptNomination(
     callback: (eventMeta: EventMeta) => void
   ): Promise<SkyBlockContractType> {
-    const provider = await this.provider;
+    const provider = await this.contract;
     return provider.on("AcceptNomination", (nominated, email) => {
       return callback(decodeEvent(nominated, email));
     });
   }
 
   async getAdmins() {
-    const provider = await this.provider;
+    const provider = await this.contract;
     return provider.getAdmins();
   }
 
   async getNominees() {
-    const provider = await this.provider;
+    const provider = await this.contract;
     return provider.getNominees();
   }
 
   async nominateAdmin(address: string) {
-    const provider = await this.provider;
+    const provider = await this.contract;
     return provider.nominateAdmin(address);
   }
 
   async acceptNomination(email: string) {
-    const provider = await this.provider;
+    const provider = await this.contract;
     return provider.acceptNomination(ethersUtils.formatBytes32String(email));
   }
 }

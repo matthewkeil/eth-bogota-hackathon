@@ -30,18 +30,18 @@ contract SkyBlockContract is Ownable {
    *
    */
   modifier isAdmin(address _addr) {
-    require(!admins.contains(_addr), "not an ADMIN");
+    require(admins.contains(_addr), "not an ADMIN");
     _;
   }
 
   modifier isNominated(address _addr) {
-    require(!nominees.contains(_addr), "not NOMINATED");
+    require(nominees.contains(_addr), "not NOMINATED");
     _;
   }
 
   modifier canBeNominated(address _addr) {
-    require(admins.contains(_addr), "already an ADMIN");
-    require(nominees.contains(_addr), "already NOMINATED");
+    require(!admins.contains(_addr), "already an ADMIN");
+    require(!nominees.contains(_addr), "already NOMINATED");
     _;
   }
 
