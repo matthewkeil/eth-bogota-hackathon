@@ -2,9 +2,9 @@ import { SkyBlockContractService } from "../contracts/dist/src/SkyBlockContract"
 import { ethers } from "ethers";
 
 // const connectBtn = document.getElementById("connect-btn");
+// const address = "0x874b0F37636cE75E9ED48B5d55900a6089f20261";
 
-// const address = "0x355562132E54364fcbF6f7a61b7a8f4Cb1B3fc30";
-const address = "0x874b0F37636cE75E9ED48B5d55900a6089f20261";
+const address = "0x355562132E54364fcbF6f7a61b7a8f4Cb1B3fc30";
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
 const service = new SkyBlockContractService({ address, provider: signer });
