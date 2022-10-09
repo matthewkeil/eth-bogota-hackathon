@@ -6,7 +6,8 @@
   "scripts": {
     "vite": "vite",
     "dev": "run-p vite esbuild:watch",
-    "build": "vite build",
+    "copy": "cp index.html dist; cp style.css dist",
+    "build": "npm run esbuild && npm run copy",
     "preview": "vite preview",
     "esbuild": "esbuild main.js --bundle --outfile=dist/bundle.js",
     "esbuild:watch": "esbuild main.js --bundle --outfile=dist/bundle.js --watch"
