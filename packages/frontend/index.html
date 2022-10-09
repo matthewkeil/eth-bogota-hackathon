@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/Logo.svg" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="style.css" rel="stylesheet" type="text/css" />
     <title>SkyBlock</title>
@@ -10,17 +10,32 @@
   <body>
     <button id="connect-btn">Connect your wallet</button>
     <div class="container">
-      <div id="info">
-        <h1>Address of the new admin</h1>
-        <input type="text" id="address-input" />
-        <button id="permission-btn">Giving Permission</button>
-      </div>
-      <div class="members">
-        <div class="list" id="dao-member-list">
-          <h2>DAO admins</h2>
+      <button id="permission-page-btn">Permission</button>
+      <button id="decrypting-page-btn">Decrypting</button>
+      <div id="permission-container" class="display">
+        <div id="info">
+          <h1>Address of the new admin</h1>
+          <input type="text" id="address-input" />
+          <button id="permission-btn">Giving Permission</button>
         </div>
-        <div class="list">
-          <h2>Waiting for confirmation</h2>
+        <div class="members">
+          <div class="list" id="dao-member-list">
+            <h2>DAO admins</h2>
+          </div>
+          <div class="list">
+            <h2>Waiting for confirmation</h2>
+          </div>
+        </div>
+      </div>
+
+      <div id="decrypt-container" class="hide">
+        <div id="info">
+          <h1>Decrypt your password</h1>
+          <input type="text" id="decrypt-input" />
+          <button id="decrypt-btn">Decrypt</button>
+        </div>
+        <div class="password">
+          <label id="decrypted-password"></label>
         </div>
       </div>
     </div>
