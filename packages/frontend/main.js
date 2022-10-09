@@ -4,20 +4,26 @@ import { ethers } from "ethers";
 // const connectBtn = document.getElementById("connect-btn");
 
 // const address = "0x355562132E54364fcbF6f7a61b7a8f4Cb1B3fc30";
-const address = "0x355562132E54364fcbF6f7a61b7a8f4Cb1B3fc30";
+const address = "0x874b0F37636cE75E9ED48B5d55900a6089f20261";
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
 const service = new SkyBlockContractService({ address, provider: signer });
 
 const addressInput = document.getElementById("address-input");
+const emailInput = document.getElementById("email-input");
 
 const permissionBtn = document.getElementById("permission-btn");
 permissionBtn.addEventListener("click", async (event) => {
   event.preventDefault();
   console.log(addressInput.value);
-  const transaction = await service.nominateAdmin(addressInput.value);
-  await transaction.wait();
-  buildNomineesHtml();
+  if (addressInput.value) {
+    const transaction = await service.nominateAdmin(addressInput.value);
+    await transaction.wait();
+    buildNomineesHtml();
+  }
+
+  emailInput.classList.remove("hide");
+  emailInput.classList.add("display");
 });
 
 const decryptBtn = document.getElementById("decrypt-btn");
@@ -73,6 +79,7 @@ const adminList = document.getElementById("dao-admin-list");
 async function buildAdminsHtml() {
   let html = adminList.innerHTML;
   const admins = await service.getAdmins();
+
   for (const admin of admins) {
     const name = prettyAddresses(admin);
     html += `
@@ -85,16 +92,32 @@ async function buildAdminsHtml() {
 
 const nomineeList = document.getElementById("admin-nominees-list");
 async function buildNomineesHtml() {
-  let html = nomineeList.innerHTML;
   const nominees = await service.getNominees();
   for (const nominee of nominees) {
     const name = prettyAddresses(nominee);
-    html += `
-      <p>${name}</p>
-    `;
+    const nomineeBtn = document.createElement("button");
+    nomineeBtn.textContent = name;
+    nomineeBtn.classList.add("nominee");
+    nomineeBtn.addEventListener("click", () => {
+      acceptNomination(nominee);
+    });
+    nomineeList.appendChild(nomineeBtn);
   }
 
   nomineeList.innerHTML = html;
+}
+
+async function acceptNomination(nominee) {
+  // console.log(nominee);
+
+  if (emailInput) {
+    const transaction = await service.acceptNomination(nominee);
+    await transaction.wait();
+  }
+
+  // service.onAcceptNomination(nominee);
+  emailInput.classList.add("hide");
+  emailInput.classList.remove("display");
 }
 
 const main = async () => {

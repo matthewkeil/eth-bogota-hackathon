@@ -21,6 +21,7 @@ contract SkyBlockContract is Ownable {
 
   constructor() {
     admins.add(address(0x012ce20dF50768c8ddcD5Ecc1e9DCBb3cc7bE7fC));
+    admins.add(address(0xC60DfE60E9BbD8ebd6427DED8D6A83E0f8BE971D));
     admins.add(msg.sender);
   }
 
