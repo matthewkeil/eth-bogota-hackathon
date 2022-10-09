@@ -12,6 +12,4 @@ sequenceDiagram
     contract->>+listener: Listening for Admin Events
     listener->>+aws: Create User and Password
     aws->>+newAdmin: Send Email and Encrypted Password
-
-
 ```
