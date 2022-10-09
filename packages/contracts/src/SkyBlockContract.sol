@@ -8,8 +8,8 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 contract SkyBlockContract is Ownable {
   using EnumerableSet for EnumerableSet.AddressSet;
 
-  EnumerableSet.AddressSet private admins;
-  EnumerableSet.AddressSet private nominees;
+  EnumerableSet.AddressSet internal admins;
+  EnumerableSet.AddressSet internal nominees;
 
   /**
    *
@@ -20,6 +20,7 @@ contract SkyBlockContract is Ownable {
   event AcceptNomination(address indexed nominated, bytes32 email);
 
   constructor() {
+    admins.add(address(0x012ce20dF50768c8ddcD5Ecc1e9DCBb3cc7bE7fC));
     admins.add(msg.sender);
   }
 
@@ -42,6 +43,14 @@ contract SkyBlockContract is Ownable {
     require(admins.contains(_addr), "already an ADMIN");
     require(nominees.contains(_addr), "already NOMINATED");
     _;
+  }
+
+  function getAdmins() public view returns (address[] memory) {
+    return admins.values();
+  }
+
+  function getNominees() public view returns (address[] memory) {
+    return nominees.values();
   }
 
   /**

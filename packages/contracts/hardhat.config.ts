@@ -8,13 +8,14 @@ import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "./test/hardhatTsJestPlugin";
+import { chains } from "./lib";
 
 const CONTRACT_NAME = "SkyBlockContract";
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
-task("deployContract", "runs lib/deployContract", async () => {
-  const { deployContract } = await import("./lib/deployContract");
+task("deploy", "runs bin/deployContract", async () => {
+  const { deployContract } = await import("./bin/deployContract");
   return deployContract(CONTRACT_NAME);
 });
 
@@ -66,17 +67,29 @@ const config: HardhatUserConfig = {
       chainId: 1337,
       gas: 2100000,
       gasPrice: 8000000000,
-      accounts: accounts.map((privateKey) => privateKey) // ({ privateKey, balance: "100000000000000000000" }))
+      accounts: accounts.map((privateKey) => privateKey)
+    },
+    polygon: {
+      url: "https://polygon-rpc.com/",
+      chainId: 137,
+      gas: 2100000,
+      gasPrice: 8000000000,
+      accounts: accounts.map((privateKey) => privateKey)
+    },
+    mumbai: {
+      url: "https://rpc-mumbai.maticvigil.com",
+      chainId: 80001,
+      gas: 1000000, // or maybe better with 2200000
+      gasPrice: 20000000000, // 20 gwei (in wei) (default: 100 gwei)
+      // gas: 2100000,
+      // gasPrice: 8000000000,
+      accounts: accounts.map((privateKey) => privateKey)
     },
     goerli: {
       url: `https://goerli.infura.io/${infuraPath}`,
-      accounts: accounts
-    },
+      accounts: accounts.map((privateKey) => privateKey)
+    }
   },
-  // gasReporter: {
-  //   enabled: process.env.REPORT_GAS !== undefined,
-  //   currency: "USD"
-  // },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY
   }

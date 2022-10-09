@@ -43,10 +43,3 @@ export function decodeEvent(
     email: ethersUtils.parseBytes32String(nominatedOrEmail)
   };
 }
-
-export function encodeArgsForSolidity({ nominated, email, existing }: EventMeta) {
-  if (email) {
-    return [nominated, ethersUtils.formatBytes32String(email)];
-  }
-  return [existing, nominated];
-}
