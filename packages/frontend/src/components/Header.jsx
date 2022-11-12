@@ -2,10 +2,12 @@ import { ConnectButton } from "web3uikit";
 
 export default function Header() {
   return (
-    <div className="flex justify-between items-center bg-sky-900">
-      <h1 className="py-4 px-4 font-bold text-3xl">SkyBlock</h1>
-      <h3 className="py-4 px-4 font-bold text-xl">Permission View</h3>
-      <ConnectButton />
+    <div className="grid grid-cols-3 justify-items-stretch items-center text-sky-50 bg-sky-900">
+      <h1 className="py-4 px-4  font-bold text-xl">SkyBlock</h1>
+      <h3 className="py-4 justify-self-center px-4 font-bold text-l">Permission View</h3>
+      <div className="justify-self-end">
+        <ConnectButton />
+      </div>
     </div>
   );
 }
