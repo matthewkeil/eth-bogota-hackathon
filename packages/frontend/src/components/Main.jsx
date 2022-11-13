@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
-import { useMoralis, useWeb3Contract } from "react-moralis";
-import { Input, Table, Button } from "web3uikit";
+import { useMoralis, useWeb3Contract, useChain } from "react-moralis";
+import { Input, Table, Button, TextArea } from "web3uikit";
 
-import { nanoid } from "nanoid";
 import contractInfo from "../../abi.json";
 
 // const contractAddress = "0x355562132E54364fcbF6f7a61b7a8f4Cb1B3fc30";
 const contractAddress = "0x5AD10DA226e611D1281d6a04a6833B535311cC57";
 const contractAbi = contractInfo;
 
-export default function Admins() {
+export default function Main(props) {
+  const { checkIsNominated, isNominated } = props;
+
   const { isWeb3Enabled } = useMoralis();
+  const { account } = useChain();
 
   const [admins, setAdmins] = useState([]);
   const [nominees, setNominee] = useState([]);
@@ -45,6 +47,7 @@ export default function Admins() {
     const nomineesFromContract = await getNominees();
     setAdmins(adminsFromContract);
     setNominee(nomineesFromContract);
+    checkIsNominated(nomineesFromContract);
   }
 
   const handleSuccess = async (tx) => {
@@ -55,8 +58,9 @@ export default function Admins() {
   useEffect(() => {
     if (isWeb3Enabled) {
       updateUI();
+      // checkIsNominated(nominees);
     }
-  }, [isWeb3Enabled]);
+  }, [isWeb3Enabled, account]);
 
   function adminList() {
     const data = [];
@@ -80,7 +84,25 @@ export default function Admins() {
     return data;
   }
 
-  return (
+  return isNominated ? (
+    <div className="flex flex-col items-center gap-6">
+      <TextArea
+        label="Enter Code"
+        name="Test TextArea Default"
+        onBlur={function noRefCheck() {}}
+        onChange={function noRefCheck() {}}
+        placeholder="Type here field"
+        value=""
+      />
+
+      <Button
+        color="blue"
+        onClick={() => console.log("Clicked")}
+        text="Accept Nomination"
+        theme="colored"
+      />
+    </div>
+  ) : (
     <div className="flex justify-evenly">
       <div className="flex flex-col gap-6 w-1/4 px-10 ml-10 my-2">
         <Input

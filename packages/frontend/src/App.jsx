@@ -1,20 +1,40 @@
+import { useState, useEffect } from "react";
 import { useMoralis, useChain } from "react-moralis";
-import { Hero, CryptoCards, ChainSelector } from "web3uikit";
+import { Hero, ChainSelector } from "web3uikit";
 
 import Header from "./components/Header";
-import Admins from "./components/Admins";
+import Main from "././components/Main";
 
 function App() {
+  const [isNominated, setIsNominated] = useState(false);
+
   const { chainId: chainIdHex } = useMoralis();
-  const { switchNetwork } = useChain();
+  const { switchNetwork, account } = useChain();
   const chainId = parseInt(chainIdHex);
+
+  function checkIsNominated(nominees) {
+    if (nominees.length > 0) {
+      for (let nominee of nominees) {
+        if (nominee.toUpperCase() === account.toUpperCase()) {
+          setIsNominated(true);
+          return;
+        }
+      }
+      setIsNominated(false);
+    }
+  }
+
   return (
     <div className="text-black h-screen bg-sky-50 ">
-      <Header />
+      <Header isNominated={isNominated} />
       <Hero
         backgroundColor=""
         title="DAO Management of Cloud Computing Accounts"
-        subTitle="Add the wallet address of someone you want to nominate"
+        subTitle={
+          isNominated
+            ? "Accept nomination and become a new admin of the DAO"
+            : "Add the wallet address of someone you want to nominate"
+        }
         height="200px"
       />
       {chainId !== 5 ? (
@@ -39,7 +59,7 @@ function App() {
           />
         </div>
       ) : (
-        <Admins />
+        <Main isNominated={isNominated} checkIsNominated={checkIsNominated} />
       )}
     </div>
   );
