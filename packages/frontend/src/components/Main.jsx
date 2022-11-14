@@ -16,7 +16,8 @@ export default function Main(props) {
 
   const [admins, setAdmins] = useState([]);
   const [nominees, setNominee] = useState([]);
-  const [nomineeAddress, setNomineeAddress] = useState("");
+  const [nomineeData, setNomineeData] = useState({ address: "", email: "" });
+  const [nomineeAcceptCode, setNomineeAcceptCode] = useState("");
 
   const { runContractFunction: getAdmins } = useWeb3Contract({
     abi: contractAbi,
@@ -38,7 +39,7 @@ export default function Main(props) {
     abi: contractAbi,
     contractAddress: contractAddress,
     functionName: "nominateAdmin",
-    params: { _nominated: nomineeAddress },
+    params: { _nominated: nomineeData.address },
     msgValue: ""
   });
 
@@ -50,15 +51,32 @@ export default function Main(props) {
     checkIsNominated(nomineesFromContract);
   }
 
-  const handleSuccess = async (tx) => {
+  async function handleSuccess(tx) {
     await tx.wait(1);
     updateUI();
-  };
+  }
+
+  function handleChangeNomination(event) {
+    setNomineeData((prevData) => {
+      return { ...prevData, [event.target.name]: event.target.value };
+    });
+  }
+
+  function handleChangeAcceptCode(event) {
+    setNomineeAcceptCode(event.target.value);
+  }
+
+  function handleClickNominationForm() {
+    setNomineeData({ address: "", email: "" });
+  }
+
+  function handleClickAcceptNomination() {
+    setNomineeAcceptCode("");
+  }
 
   useEffect(() => {
     if (isWeb3Enabled) {
       updateUI();
-      // checkIsNominated(nominees);
     }
   }, [isWeb3Enabled, account]);
 
@@ -84,36 +102,45 @@ export default function Main(props) {
     return data;
   }
 
+  console.log(nomineeAcceptCode);
+
   return isNominated ? (
     <div className="flex flex-col items-center gap-6">
       <TextArea
         label="Enter Code"
         name="Test TextArea Default"
         onBlur={function noRefCheck() {}}
-        onChange={function noRefCheck() {}}
-        placeholder="Type here field"
-        value=""
+        onChange={handleChangeAcceptCode}
+        placeholder=""
+        value={nomineeAcceptCode}
       />
 
       <Button
         color="blue"
-        onClick={() => console.log("Clicked")}
+        onClick={() => handleClickAcceptNomination()}
         text="Accept Nomination"
         theme="colored"
+        size="large"
       />
     </div>
   ) : (
-    <div className="flex justify-evenly">
-      <div className="flex flex-col gap-6 w-1/4 px-10 ml-10 my-2">
+    <div className="flex flex-col items-center">
+      <div className="flex flex-col gap-6 w-1/3 px-10 ml-10 my-2">
         <Input
+          name="address"
+          width="100%"
           label="Wallet Address"
           placeholder="Address"
-          value=""
-          onChange={(event) => setNomineeAddress(event.target.value)}
+          value={nomineeData.address}
+          onChange={handleChangeNomination}
         />
         <Input
+          name="email"
+          width="100%"
           label="Enter nominee email"
           placeholder="hello@skyblock.io"
+          value={nomineeData.email}
+          onChange={handleChangeNomination}
           type="email"
           validation={{
             maxLength: 48,
@@ -125,18 +152,20 @@ export default function Main(props) {
         />
         <Button
           isFullWidth="true"
+          size="large"
           color="blue"
           onClick={async () => {
             await nominateAdmin({
               onSuccess: handleSuccess,
               onError: (error) => console.log(error)
             });
+            handleClickNominationForm();
           }}
           text="Nominate"
           theme="colored"
         />
       </div>
-      <div className="flex justify-evenly w-3/4 px-10">
+      <div className="flex justify-center gap-20 w-3/4 p-10 mt-1  0">
         <Table
           columnsConfig="10px 2fr 2fr 3fr 10px"
           data={[...adminList()]}

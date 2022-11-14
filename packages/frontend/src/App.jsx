@@ -25,7 +25,7 @@ function App() {
   }
 
   return (
-    <div className="text-black h-screen bg-sky-50 ">
+    <div className="text-black">
       <Header isNominated={isNominated} />
       <Hero
         backgroundColor=""
