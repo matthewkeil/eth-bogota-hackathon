@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: montserrat;
+}
+
+#root {
+  color: #ffffff;
+}
+
+body {
+  background-color: #f0f9ff;
+}
