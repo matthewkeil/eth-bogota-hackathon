@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { providers } from "ethers";
 import { SkyBlockContractService } from "../../contracts/dist/src/SkyBlockContract";
-import { createUser, sendGridEmail } from "./utils";
+import { createUser, sendSESEmail } from "./utils";
 
 (async function () {
   // const address = "0x355562132E54364fcbF6f7a61b7a8f4Cb1B3fc30";
@@ -16,7 +16,7 @@ import { createUser, sendGridEmail } from "./utils";
       address: nominated
     })
       .then(({ username, password }) => {
-        return sendGridEmail({
+        return sendSESEmail({
           username,
           password,
           emailAddress: email as string

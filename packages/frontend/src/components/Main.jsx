@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useMoralis, useWeb3Contract, useChain } from "react-moralis";
 import { Input, Table, Button } from "web3uikit";
 
-import contractInfo from "../../abi.json";
+import { abi, contractAddress } from "../../contractInfo.json";
 import { ethers } from "ethers";
+import Nominated from "./Nominated";
 
 // const contractAddress = "0x355562132E54364fcbF6f7a61b7a8f4Cb1B3fc30";
-const contractAddress = "0x5AD10DA226e611D1281d6a04a6833B535311cC57";
-const contractAbi = contractInfo;
+// const contractAddress = "0x5AD10DA226e611D1281d6a04a6833B535311cC57";
 
 export default function Main(props) {
   const { checkIsNominated, isNominated } = props;
@@ -18,37 +18,28 @@ export default function Main(props) {
   const [admins, setAdmins] = useState([]);
   const [nominees, setNominee] = useState([]);
   const [nomineeAddress, setNomineeAddress] = useState("");
-  const [nomineeEmail, setNomineeEmail] = useState("");
 
   const { runContractFunction: getAdmins } = useWeb3Contract({
-    abi: contractAbi,
-    contractAddress: contractAddress,
+    abi,
+    contractAddress,
     functionName: "getAdmins",
     params: {},
     msgValue: ""
   });
 
   const { runContractFunction: getNominees } = useWeb3Contract({
-    abi: contractAbi,
-    contractAddress: contractAddress,
+    abi,
+    contractAddress,
     functionName: "getNominees",
     params: {},
     msgValue: ""
   });
 
   const { runContractFunction: nominateAdmin } = useWeb3Contract({
-    abi: contractAbi,
-    contractAddress: contractAddress,
+    abi,
+    contractAddress,
     functionName: "nominateAdmin",
     params: { _nominated: nomineeAddress },
-    msgValue: ""
-  });
-
-  const { runContractFunction: acceptNomination } = useWeb3Contract({
-    abi: contractAbi,
-    contractAddress: contractAddress,
-    functionName: "acceptNomination",
-    params: { email: ethers.utils.formatBytes32String(nomineeEmail) },
     msgValue: ""
   });
 
@@ -69,16 +60,8 @@ export default function Main(props) {
     setNomineeAddress(event.target.value);
   }
 
-  function handleChangeNomineeEmail(event) {
-    setNomineeEmail(event.target.value);
-  }
-
   function handleClickNomination() {
     setNomineeAddress("");
-  }
-
-  function handleClickAcceptNomination() {
-    setNomineeEmail("");
   }
 
   useEffect(() => {
@@ -109,42 +92,8 @@ export default function Main(props) {
     return data;
   }
 
-  console.log(ethers.utils.formatBytes32String(nomineeEmail));
-
   return isNominated ? (
-    <div className="flex flex-col items-center gap-6 w-1/4 m-auto">
-      <Input
-        name="email"
-        width="100%"
-        label="Enter your email"
-        placeholder="hello@skyblock.io"
-        value={nomineeEmail}
-        onChange={handleChangeNomineeEmail}
-        type="email"
-        validation={{
-          maxLength: 48,
-          minLength: 1,
-          pattern: "^[^@s]+@[^@s]+.[^@s]+$",
-          regExpInvalidMessage: "That is not a valid email address",
-          required: false
-        }}
-      />
-
-      <Button
-        isFullWidth="true"
-        color="blue"
-        onClick={async () => {
-          await acceptNomination({
-            onSuccess: handleSuccess,
-            onError: (error) => console.log(error)
-          });
-          handleClickAcceptNomination();
-        }}
-        text="Accept Nomination"
-        theme="colored"
-        size="large"
-      />
-    </div>
+    <Nominated account={account} />
   ) : (
     <div className="flex flex-col items-center">
       <div className="flex flex-col gap-6 w-1/3 px-10 ml-10 my-2">
