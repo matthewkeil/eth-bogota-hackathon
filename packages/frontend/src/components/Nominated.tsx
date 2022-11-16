@@ -5,7 +5,11 @@ import { Input, Button } from "web3uikit";
 
 import { abi, contractAddress } from "../../contractInfo.json";
 
-function Nominated({ account }) {
+interface NominatedProps {
+  account: string | null;
+}
+
+function Nominated({ account }: NominatedProps) {
   const [nomineeEmail, setNomineeEmail] = useState("");
 
   const { runContractFunction: acceptNomination } = useWeb3Contract({
@@ -17,7 +21,7 @@ function Nominated({ account }) {
   });
 
   async function onAcceptNomination() {
-    if (!window.ethereum) {
+    if (!window.ethereum.request) {
       throw new Error("no wallet found");
     }
 
@@ -35,9 +39,34 @@ function Nominated({ account }) {
         }
       });
 
-    console.log(publicKey);
-    await acceptNomination();
-    setNomineeEmail("");
+    console.log(account);
+
+    const signature = await window.ethereum.request({
+      method: "personal_sign",
+      params: [account, account]
+    });
+
+    console.log({ publicKey, signature });
+
+    // await acceptNomination({
+    //   onSuccess: () => setNomineeEmail(""),
+    //   onError: (err) => console.error(err)
+    // });
+
+    const response = await fetch(
+      "https://zzetx327wk.execute-api.us-east-1.amazonaws.com/prod/accept-nomination",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          emailAddress: nomineeEmail,
+          walletAddress: account,
+          publicKey,
+          signature
+        })
+      }
+    );
+
+    console.log(response);
   }
 
   return (
@@ -51,16 +80,18 @@ function Nominated({ account }) {
         onChange={(e) => setNomineeEmail(e.target.value)}
         type="email"
         validation={{
-          maxLength: 48,
-          minLength: 1,
-          pattern: "^[^@s]+@[^@s]+.[^@s]+$",
-          regExpInvalidMessage: "That is not a valid email address",
-          required: false
+          characterMaxLength: 48,
+          characterMinLength: 1,
+          required: true
+          // regExp: "^[^@s]+@[^@s]+.[^@s]+$",
+          // regExpInvalidMessage: "That is not a valid email address",
+          // maxLength: 48,
+          // minLength: 1,
         }}
       />
 
       <Button
-        isFullWidth="true"
+        isFullWidth={true}
         color="blue"
         onClick={onAcceptNomination}
         text="Accept Nomination"

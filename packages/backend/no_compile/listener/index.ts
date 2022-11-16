@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { providers } from "ethers";
-import { SkyBlockContractService } from "../../contracts/dist/src/SkyBlockContract";
+import { SkyBlockContractService } from "@sky-block/contracts";
 import { createUser, sendSESEmail } from "./utils";
 
 (async function () {

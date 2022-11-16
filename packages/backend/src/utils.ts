@@ -1,26 +1,39 @@
 import "dotenv/config";
-import { IAM, SES, SharedIniFileCredentials } from "aws-sdk";
-import sendgrid from "@sendgrid/mail";
+import { IAM, SES, SharedIniFileCredentials, AWSError } from "aws-sdk";
+// import sendgrid from "@sendgrid/mail";
+import { encrypt } from "@metamask/eth-sig-util";
+import { bufferToHex } from "ethereumjs-util";
 
 const credentials = new SharedIniFileCredentials({ profile: "tr" });
 const iam = new IAM({ credentials });
 const ses = new SES({ region: "us-east-1", credentials });
 
-const apiKey = `${process.env.SENDGRID_API_KEY}`;
-sendgrid.setApiKey(apiKey);
+// const apiKey = `${process.env.SENDGRID_API_KEY}`;
+// sendgrid.setApiKey(apiKey);
 
 interface CreateUserProps {
-  address: string;
+  username: string;
 }
 
-function getNonce() {
-  return Math.floor(999 * Math.random() + 1);
-}
+export async function createUser({ username }: CreateUserProps) {
+  let existingUser: IAM.User | undefined;
+  try {
+    ({ User: existingUser } = await iam.getUser({ UserName: username }).promise());
+  } catch (err) {
+    if (err instanceof Error && (err as AWSError).code === "NoSuchEntity") {
+      console.log("no existing user found. making new user");
+    } else {
+      throw err;
+    }
+  }
+  if (existingUser) {
+    console.log("existing user found with that address");
+    return existingUser;
+  }
 
-export async function createUser({ address }: CreateUserProps) {
   const { User } = await iam
     .createUser({
-      UserName: address
+      UserName: username
     })
     .promise();
 
@@ -28,23 +41,52 @@ export async function createUser({ address }: CreateUserProps) {
     throw new Error("error creating user");
   }
 
-  const password = `EthGlobalRocks${getNonce()}!`;
-
-  const { LoginProfile } = await iam
-    .createLoginProfile({
+  await iam
+    .addUserToGroup({
       UserName: User.UserName,
+      GroupName: "TRAdmin"
+    })
+    .promise();
+
+  return User;
+}
+
+function getNonce() {
+  return Math.floor(999 * Math.random() + 1);
+}
+
+interface GeneratePasswordProps {
+  username: string;
+  publicKey: string;
+}
+interface GeneratePasswordResponse {
+  encrypted: string;
+  unencrypted: string;
+}
+export async function generateAndEncryptPassword({
+  username,
+  publicKey
+}: GeneratePasswordProps): Promise<GeneratePasswordResponse> {
+  const password = `EthGlobalRocks${getNonce()}!`;
+  console.log(password);
+
+  await iam
+    .createLoginProfile({
+      UserName: username,
       Password: password,
       PasswordResetRequired: true
     })
     .promise();
 
-  // const encryptedPassword = publicEncrypt(address, Buffer.from(password)).toString();
-
-  console.log({ LoginProfile, password });
+  const encryptedData = encrypt({
+    publicKey,
+    data: password,
+    version: "x25519-xsalsa20-poly1305"
+  });
 
   return {
-    username: address,
-    password: password
+    encrypted: bufferToHex(Buffer.from(JSON.stringify(encryptedData), "utf8")),
+    unencrypted: password
   };
 }
 
@@ -96,11 +138,11 @@ export function sendSESEmail(props: SendEmailProps) {
     .promise();
 }
 
-export function sendGridEmail(props: SendEmailProps) {
-  return sendgrid.send({
-    from: "admin@trustedresources.org",
-    to: props.emailAddress,
-    subject: "Admin Account Information for SkyBlock",
-    text: createEmailBody(props)
-  });
-}
+// export function sendGridEmail(props: SendEmailProps) {
+//   return sendgrid.send({
+//     from: "admin@trustedresources.org",
+//     to: props.emailAddress,
+//     subject: "Admin Account Information for SkyBlock",
+//     text: createEmailBody(props)
+//   });
+// }

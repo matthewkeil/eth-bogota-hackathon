@@ -5,18 +5,22 @@
     "dev": "npm run ts ./src",
     "clean": "rm -rf dist",
     "clean:nm": "rm -rf node_modules",
-    "build": "tsc -p tsconfig.build.json && rm -rf dist/providers",
+    "build": "tsc -p tsconfig.build.json",
     "cdk": "cdk",
     "node": "node",
     "ts": "npm run node -- -r ts-node/register"
   },
   "dependencies": {
+    "@metamask/eth-sig-util": "^5.0.2",
     "@sendgrid/mail": "^7.7.0",
+    "@sky-block/contracts": "file:../contracts",
     "eth-crypto": "^2.3.0",
+    "ethereumjs-util": "^7.1.5",
     "ethers": "^5.7.1",
     "secp256k1": "^4.0.3"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.108",
     "aws-sdk": "^2.1231.0",
     "dotenv": "^10.0.0",
     "esbuild": "^0.14.39",

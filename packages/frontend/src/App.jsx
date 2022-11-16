@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useMoralis, useChain } from "react-moralis";
 import { Hero, ChainSelector } from "web3uikit";
 
